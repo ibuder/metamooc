@@ -8,9 +8,14 @@ Created on Wed Mar  4 08:57:18 2015
 import pandas as pd
 import requests
 
-#courses = pd.read_json(
-#    'https://api.coursera.org/api/catalog.v1/courses?ids=2,3',
-#    orient='records')
+import db
 
-params = {'ids': ['2,3'], 'fields': ['language,subtitleLanguagesCsv,isTranslate,universityLogo,targetAudience,instructor,estimatedClassWorkload']}
-r = requests.get('https://api.coursera.org/api/catalog.v1/courses', params=params)
+params = {'fields': ['language,subtitleLanguagesCsv,isTranslate,universityLogo,targetAudience,instructor,estimatedClassWorkload']}
+r = requests.get('https://api.coursera.org/api/catalog.v1/courses', 
+                 params=params)
+
+coursera_courses = pd.DataFrame(r.json()['elements'])
+del coursera_courses['links']  # This column causes mySQL to choke
+
+engine = db.get_rw_engine()
+coursera_courses.to_sql('coursera_courses', engine, chunksize=1)
