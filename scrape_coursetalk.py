@@ -9,7 +9,10 @@ import lxml.html
 import requests
 import pandas as pd
 
+import db
 
+
+# TODO some courses have duplicate titles. Add author to disambiguate?
 titles, ratings, n_reviews = [], [], []
 for ipage in range(1, 35):  # FIXME Hardcoded number of pages in search result!
     params = {'page': ipage}
