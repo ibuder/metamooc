@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 sys.path.append(os.path.abspath(".."))
 import db
+import plotstyle
 
 X = db.get_coursera_ratings()
 
-plt.xkcd()
-matplotlib.rcParams.update({'font.size': 18})
+
 plt.clf()
 plt.hist( (X.loc[X['n_rating'] > 0, 'rating'], X.loc[X['n_rating'] > 10, 
                  'rating'],), normed=True, label=('>0 ratings', 
