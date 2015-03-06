@@ -6,7 +6,9 @@ import wtforms.validators as validators
 import wtforms.fields
 
 class RecommendWeightForm(wtforms.form.Form):
-    difficulty = wtforms.fields.DecimalField(u'Difficulty weight', [validators.required()])
+    average_hours = wtforms.fields.DecimalField(u'Time commitment', [validators.required()])
+    targetAudience = wtforms.fields.DecimalField(u'Difficulty', [validators.required()])
+    n_rating = wtforms.fields.DecimalField(u'Popularity', [validators.required()])
 
 
 @app.route("/", methods=['GET', 'POST'])
