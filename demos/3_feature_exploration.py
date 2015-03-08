@@ -10,6 +10,8 @@ import numpy as np
 import re
 import scipy as sp
 import scipy.stats
+import os
+import sys
 
 sys.path.append(os.path.abspath(".."))
 import db

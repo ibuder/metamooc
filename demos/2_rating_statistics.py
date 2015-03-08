@@ -6,7 +6,8 @@ Created on Thu Mar  5 11:01:59 2015
 """
 
 import matplotlib.pyplot as plt
-
+import os
+import sys
 
 sys.path.append(os.path.abspath(".."))
 import db
