@@ -26,6 +26,7 @@ Enter the relative importance of:
 Enter negative numbers if you desire the opposite.
 
 {% if recommendations is defined %}
+    <p>
     <table>
     <tr>
         <th>Class</th>
@@ -38,5 +39,8 @@ Enter negative numbers if you desire the opposite.
         {% endfor %}
         </tr>
     {% endfor %}
-    </table>
+    </table></p>
 {% endif %}
+<p>
+<a href="https://github.com/ibuder/metamooc">Code</a>
+</p>

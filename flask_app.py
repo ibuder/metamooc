@@ -16,6 +16,7 @@ def map_lang_form(langs):
     Utility to map a list of language codes to (code, human-readable) pairs
     """
     def pair_builder(lang):
+        # Some language codes have '_' or '-', but parse can only handle 1 separator
         loc = babel.Locale.parse(lang.replace('_', '-'), sep='-')
         return (lang, loc.english_name + ' (' + loc.get_language_name() + ')',)
 
@@ -23,9 +24,12 @@ def map_lang_form(langs):
 
 
 class RecommendWeightForm(wtforms.form.Form):
+    """
+    Form for the user to enter feature weights
+    """
     average_hours = wtforms.fields.FloatField(u'Workload', [validators.InputRequired()])
     targetAudience = wtforms.fields.FloatField(u'Difficulty', [validators.InputRequired()])
-    n_rating = wtforms.fields.FloatField(u'Popularity', [validators.required()])
+    n_rating = wtforms.fields.FloatField(u'Popularity', [validators.InputRequired()])
     subtitle_lang = wtforms.fields.SelectField(u'Subtitle language', 
         [validators.optional()], choices=map_lang_form(cf.subtitle_languages().columns))
     subtitle_weight = wtforms.fields.FloatField(u'Subtitle importance',
@@ -40,10 +44,12 @@ def recommend():
         theta[u'average_hours'] = form.average_hours.data
         theta[u'targetAudience'] = form.targetAudience.data
         theta[u'n_rating'] = form.n_rating.data
-        print theta
+        print theta  # TODO For debugging purposes (eventually remove)
         r = cf.recommend_content_based(theta, n_courses=10)
         # Jinja has trouble with DataFrame, so get the values we want to display
-        recommendations = [ (r.loc[i, 'name'].decode('utf-8'), r.loc[i, 'score'],) for i in r.index]
+        # mySQL stores name as utf-8, but Jinja needs unicode
+        recommendations = [ (r.loc[i, 'name'].decode('utf-8'), 
+            r.loc[i, 'score'],) for i in r.index]
         return render_template('weight_form.html', form=form, recommendations=recommendations)
     return render_template('weight_form.html', form=form)
 
