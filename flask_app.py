@@ -5,9 +5,10 @@ import wtforms.form
 import wtforms.validators as validators
 import wtforms.fields
 import babel
+import numpy as np
 
 import features
-cf = features.CourseraFeatures()
+cf = features.CourseraFeatures()  # Global db cache
 
 
 def map_lang_form(langs):
@@ -22,19 +23,28 @@ def map_lang_form(langs):
 
 
 class RecommendWeightForm(wtforms.form.Form):
-    average_hours = wtforms.fields.DecimalField(u'Time commitment', [validators.required()])
-    targetAudience = wtforms.fields.DecimalField(u'Difficulty', [validators.required()])
-    n_rating = wtforms.fields.DecimalField(u'Popularity', [validators.required()])
+    average_hours = wtforms.fields.FloatField(u'Workload', [validators.InputRequired()])
+    targetAudience = wtforms.fields.FloatField(u'Difficulty', [validators.InputRequired()])
+    n_rating = wtforms.fields.FloatField(u'Popularity', [validators.required()])
     subtitle_lang = wtforms.fields.SelectField(u'Subtitle language', 
         [validators.optional()], choices=map_lang_form(cf.subtitle_languages().columns))
-    subtitle_weight = wtforms.fields.DecimalField(u'Subtitle importance',
+    subtitle_weight = wtforms.fields.FloatField(u'Subtitle importance',
         [validators.optional()], default=0.0)
 
 @app.route("/", methods=['GET', 'POST'])
 def recommend():
     form = RecommendWeightForm(request.form)
     if request.method == 'POST' and form.validate():
-        return('Success!')
+        theta = {}  # User preferences
+        theta[form.subtitle_lang.data] = form.subtitle_weight.data
+        theta[u'average_hours'] = form.average_hours.data
+        theta[u'targetAudience'] = form.targetAudience.data
+        theta[u'n_rating'] = form.n_rating.data
+        print theta
+        r = cf.recommend_content_based(theta, n_courses=10)
+        # Jinja has trouble with DataFrame, so get the values we want to display
+        recommendations = [ (r.loc[i, 'name'].decode('utf-8'), r.loc[i, 'score'],) for i in r.index]
+        return render_template('weight_form.html', form=form, recommendations=recommendations)
     return render_template('weight_form.html', form=form)
 
 def hello():
