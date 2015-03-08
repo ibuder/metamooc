@@ -24,3 +24,23 @@ Enter the relative importance of:
     <input type=submit value=Recommend>
 </form>
 Enter negative numbers if you desire the opposite.
+
+{% if recommendations is defined %}
+    <p>
+    <table>
+    <tr>
+        <th>Class</th>
+        <th>Score</th>
+    </tr>
+    {% for rec in recommendations %}
+        <tr>
+        {% for col in rec %}
+            <td>{{ col }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table></p>
+{% endif %}
+<p>
+<a href="https://github.com/ibuder/metamooc">Code</a>
+</p>
