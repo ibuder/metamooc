@@ -17,10 +17,10 @@ X = db.get_coursera_ratings()
 
 
 plt.clf()
-plt.hist( (X.loc[X['n_rating'] > 0, 'rating'], X.loc[X['n_rating'] > 10, 
-                 'rating'],), normed=True, label=('>0 ratings', 
-                 '>10 ratings',) , bins=8)
+plt.hist((X.loc[X['n_rating'] > 0, 'rating'], X.loc[X['n_rating'] > 10,
+                 'rating'],), normed=True, label=('>0 ratings',
+                 '>10 ratings',), bins=8)
 plt.legend(loc='upper left')
-plt.xlabel('Rating')
+plt.xlabel('Average Rating')
 plt.ylabel('Relative Frequency')
 plt.title('Most ratings are good')
