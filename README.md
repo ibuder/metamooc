@@ -11,4 +11,10 @@ Create a file password.py containing the database password (e.g. the file should
 
         password = '12345'
     
-3. Now you should run the scripts scrape_coursera.py and scrape_coursetalk.py. 
+3. Now you should run the scripts scrape_coursera.py and scrape_coursetalk.py. These will populate the database.
+Note that scrape_coursetalk.py has several hardcodes that depend on the structure of the Coursetalk 
+website and the number of search result pages.
+4. Run flask_app.py; this will attempt to start a web server on port 8888. 
+Visitors will see a form in which they can enter numerical preferences for different course features 
+(e.g. difficulty). Note that the python web server is not designed for high traffic/production; 
+see the Flask documentation for how to serve the app with a production server.
